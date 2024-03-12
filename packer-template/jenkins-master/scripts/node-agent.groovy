@@ -17,6 +17,7 @@ slavesPrivateKey = new BasicSSHUserPrivateKey(
 CredentialsScope.GLOBAL,
 "jenkins-slaves",
 "ec2-user",
+"ssm-user",
 new BasicSSHUserPrivateKey.UsersPrivateKeySource(),
 "",
 ""
