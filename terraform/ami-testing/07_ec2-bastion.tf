@@ -73,7 +73,7 @@ resource "aws_iam_instance_profile" "devops_instance_profile" {
 
 resource "aws_instance" "devops_ami" {
   for_each               = var.ec2
-  ami                    = data.aws_ami.jenkins-master.id #data.aws_ami.jenkins-worker.id
+  ami                    = data.aws_ami.jenkins-worker.id #data.aws_ami.jenkins-master.id 
   instance_type          = each.value["instance_type"]
   iam_instance_profile   = aws_iam_instance_profile.devops_instance_profile.name
   vpc_security_group_ids = [aws_security_group.devops_sg.id]
