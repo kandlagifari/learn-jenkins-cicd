@@ -8,18 +8,10 @@ data "aws_ami" "jenkins-master" {
   }
 }
 
-  
 resource "aws_security_group" "jenkins_master_sg" {
   name        = "jenkins_master_sg"
   description = "Allow traffic on port 8080 and enable SSH"
   vpc_id      = aws_vpc.management.id
-
-  ingress {
-    from_port       = "22"
-    to_port         = "22"
-    protocol        = "tcp"
-    security_groups = [aws_security_group.bastion_host.id]
-  }
 
   ingress {
     from_port       = "8080"
@@ -45,13 +37,13 @@ resource "aws_security_group" "jenkins_master_sg" {
 resource "aws_instance" "jenkins_master" {
   ami                    = data.aws_ami.jenkins-master.id
   instance_type          = var.jenkins_master_instance_type
-  key_name               = aws_key_pair.management.id
+  key_name               = var.aws_key_pair_name #aws_key_pair.management.id
   vpc_security_group_ids = [aws_security_group.jenkins_master_sg.id]
-  subnet_id              = element(aws_subnet.private_subnets, 0).id
+  subnet_id              = element(aws_subnet.public_subnets, 0).id #element(aws_subnet.private_subnets, 0).id
 
   root_block_device {
     volume_type           = "gp3"
-    volume_size           = 30
+    volume_size           = 20
     delete_on_termination = false
   }
 
@@ -101,13 +93,13 @@ resource "aws_elb" "jenkins_elb" {
   security_groups           = [aws_security_group.elb_jenkins_sg.id]
   instances                 = [aws_instance.jenkins_master.id]
 
-  listener {
-    instance_port      = 8080
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = var.ssl_arn
-  }
+  # listener {
+  #   instance_port      = 8080
+  #   instance_protocol  = "http"
+  #   lb_port            = 443
+  #   lb_protocol        = "https"
+  #   ssl_certificate_id = var.ssl_arn
+  # }
 
   listener {
     instance_port      = 8080

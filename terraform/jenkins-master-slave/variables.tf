@@ -5,11 +5,6 @@ variable "region" {
   description = "AWS region"
 }
 
-variable "shared_credentials_file" {
-  type = string
-  description = "AWS credentials file path"
-}
-
 variable "aws_profile" {
   type = string
   description = "AWS profile"
@@ -25,25 +20,20 @@ variable "availability_zones" {
   description = "List of Availability Zones"
 }
 
-variable "public_key" {
-  type = string
-  description = "SSH public key path"
-}
+# variable "hosted_zone_id" {
+#   type = string
+#   description = "Route53 hosted zone id"
+# }
 
-variable "hosted_zone_id" {
-  type = string
-  description = "Route53 hosted zone id"
-}
+# variable "domain_name" {
+#   type = string
+#   description = "Domain name"
+# }
 
-variable "domain_name" {
-  type = string
-  description = "Domain name"
-}
-
-variable "ssl_arn" {
-  type = string
-  description = "ACM SSL ARN"
-}
+# variable "ssl_arn" {
+#   type = string
+#   description = "ACM SSL ARN"
+# }
 
 variable "jenkins_username" {
   type = string
@@ -58,6 +48,11 @@ variable "jenkins_password" {
 variable "jenkins_credentials_id" {
   type = string
   description = "Jenkins workers SSH based credentials id"
+}
+
+variable "aws_key_pair_name" {
+  type = string
+  description = "EC2 Key Pair Name"
 }
 
 // Default values
@@ -86,20 +81,14 @@ variable "private_subnets_count" {
   default = 2
 }
 
-variable "bastion_instance_type" {
-  type = string
-  description = "Bastion instance type"
-  default = "t2.micro"
-}
-
 variable "jenkins_master_instance_type" {
   type = string
   description = "Jenkins master EC2 instance type"
-  default = "t2.large"
+  default = "t3.large"
 }
 
 variable "jenkins_worker_instance_type" {
   type = string
   description = "Jenkins worker EC2 instance type"
-  default = "t2.medium"
+  default = "t3.medium"
 }

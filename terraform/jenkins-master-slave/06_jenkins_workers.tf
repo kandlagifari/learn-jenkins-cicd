@@ -31,7 +31,7 @@ resource "aws_security_group" "jenkins_workers_sg" {
     from_port       = "22"
     to_port         = "22"
     protocol        = "tcp"
-    security_groups = [aws_security_group.jenkins_master_sg.id, aws_security_group.bastion_host.id]
+    security_groups = [aws_security_group.jenkins_master_sg.id]
   }
 
   egress {
@@ -52,13 +52,13 @@ resource "aws_launch_configuration" "jenkins_workers_launch_conf" {
   name            = "jenkins_workers_config"
   image_id        = data.aws_ami.jenkins-worker.id
   instance_type   = var.jenkins_worker_instance_type
-  key_name        = aws_key_pair.management.id
+  key_name        = var.aws_key_pair_name #aws_key_pair.management.id
   security_groups = [aws_security_group.jenkins_workers_sg.id]
   user_data       = data.template_file.user_data_jenkins_worker.rendered
 
   root_block_device {
-    volume_type           = "gp2"
-    volume_size           = 30
+    volume_type           = "gp3"
+    volume_size           = 20
     delete_on_termination = false
   }
 
@@ -71,9 +71,9 @@ resource "aws_launch_configuration" "jenkins_workers_launch_conf" {
 resource "aws_autoscaling_group" "jenkins_workers" {
   name                 = "jenkins_workers_asg"
   launch_configuration = aws_launch_configuration.jenkins_workers_launch_conf.name
-  vpc_zone_identifier  = [for subnet in aws_subnet.private_subnets : subnet.id]
-  min_size             = 2
-  max_size             = 10
+  vpc_zone_identifier  = [for subnet in aws_subnet.public_subnets : subnet.id] #[for subnet in aws_subnet.private_subnets : subnet.id]
+  min_size             = 1
+  max_size             = 2
 
   depends_on = [aws_instance.jenkins_master, aws_elb.jenkins_elb]
 
