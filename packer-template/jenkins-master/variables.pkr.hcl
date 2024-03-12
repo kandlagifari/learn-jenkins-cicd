@@ -1,6 +1,6 @@
 variable "aws_profile" {
   type    = string
-  default = "iam-profile"
+  default = "default"
 }
 
 variable "instance_type" {

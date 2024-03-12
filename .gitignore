@@ -79,3 +79,6 @@ typings
 
 # Packer
 *.auto.pkrvars.hcl
+
+# Key Pair
+*.pem

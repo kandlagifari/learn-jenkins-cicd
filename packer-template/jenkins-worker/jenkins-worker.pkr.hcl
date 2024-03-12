@@ -38,6 +38,6 @@ build {
 
   provisioner "shell" {
     execute_command = "sudo -E -S sh '{{ .Path }}'"
-    script          = "./setup-jenkins.sh"
+    script          = "./setup-jenkins-worker.sh"
   }
 }
